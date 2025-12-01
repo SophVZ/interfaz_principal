@@ -13,3 +13,5 @@ HTML5: Usado para estructurar la página web.
 CSS: Usado para dar estilos personalizados.
 Bootstrap 5: Framework CSS para un diseño responsivo y estilos predefinidos.
 JavaScript con jQuery: Usado para hace la pagina interactiva.
+
+https://github.com/SophVZ/interfaz_principal
