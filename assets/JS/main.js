@@ -3,6 +3,7 @@ $(document).ready(function(){
 
     // agregar al carrito
     var cart = JSON.parse(localStorage.getItem('shoppingCart')) || {};
+    
     function updateCartCounter() {
         var totalItems = 0;
         for (var id in cart) {
@@ -15,6 +16,35 @@ $(document).ready(function(){
         localStorage.setItem('shoppingCart', JSON.stringify(cart));
     }
 
+        //visualizar carrito
+    function displayCart() {
+        var container = $('#cart-details-container');
+        var totalAmount = 0;
+
+        //si esta vacio
+        if (Object.keys(cart).length === 0) {
+            container.html('<p class="alert ">El carrito está vacío</p>');
+            $('#cart-summary').hide();
+            return;
+        }
+
+        //si hay productos que mostrar
+        var tableHtml = '<table class="table table-striped"><thead><tr><th>Item</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th></tr></thead><tbody>';
+    
+        for (var productId in cart) {
+            var product = cart[productId];
+            var subtotal = product.price * product.quantity;
+            totalAmount += subtotal;
+            tableHtml += '<tr><td>' + product.name + '</td><td>$' + product.price + '</td><td>' + product.quantity + '</td><td>$' + subtotal + '</td></tr>';
+        }
+
+        tableHtml += '</tbody></table>';
+        container.html(tableHtml);
+        $('#cart-summary').show();
+        $('#cart-total').text('Total: $' + totalAmount);
+    }
+
+//agregar carrito btn
     $('.add-to-cart-btn').on('click', function(e) {
         e.preventDefault();
         var productId = $(this).data('product-id');
@@ -32,7 +62,7 @@ $(document).ready(function(){
         }
         saveCart();
         updateCartCounter();
-        alert(productName + "Añadido al carrito");
+        alert(productName + " añadido al carrito");
     });
 
     updateCartCounter();
@@ -70,39 +100,9 @@ $(document).ready(function(){
         window.history.back();
     });
 
-    //visualizar carrito
-    function displayCart() {
-        var cart = JSON.parse(localStorage.getItem('shoppingCart')) || {};
-        var container = $('#cart-details-container');
-        var totalAmount = 0;
-
-        //si esta vacio
-        if (Object.keys(cart).length === 0) {
-            container.html('<p class="alert alert info">¡Tu caarito esta vacío!</p>');
-            $('cart-summary').hide();
-            return;
-        }
-
-        //si hay productos que mostrar
-        var tableHtml = '<table class="table table-striped"><thead><tr><th>Precio</th><th>Cantidad</th><th>Subtotal</th></tr></thead></table><tbody>';
-    
-        for (var productId in cart) {
-            var product = cart[productId];
-            var subtotal = product.price * product.quantity;
-            totalAmount += subtotal;
-            tableHtml += '<tr><td>' + product.name + '</td><td>$' + product.price.toFixed(2) + '</td><td>' + product.quantity + '</td><td>$' + subtotal.toFixed(2) + '</td></tr>';
-        }
-
-        tableHtml += '</tbody></table>';
-        container.html(tableHtml);
-        $('#cart-summary').show();
-        $('#cart-total').text('Total: $' + totalAmount.toFixed(2));
-    }
-
     //vaciar carrito
     $('#clear-cart-btn').on('click', function(){
         localStorage.removeItem('shoppingCart');
-
         cart = {};
         displayCart();
         updateCartCounter();
